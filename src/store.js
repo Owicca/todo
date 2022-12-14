@@ -2,25 +2,10 @@ import {openDB} from 'idb';
 
 
 const currentVersion = 1;
-const schema = {
-  "name": {
-  },
-  "depth": {
-  },
-  "time_commitment": {
-  },
-  "difficulty": {
-  },
-  "phase": {
-  }
-};
 
 export default function Store(dbName) {
   this.db = null;
   this.name = dbName;
-
-  this.setData = (objectList) => {
-  };
 
   return openDB(dbName, currentVersion, {
     upgrade(db, old, nw, tx, e) {
@@ -35,7 +20,7 @@ export default function Store(dbName) {
         //let topicIdxName = topicsTableName + "_idx";
         //let topicIdx = db.createIndex(topicIdxName, "id");
 
-        console.log("created ", topicsTableName);
+        console.log("created ", topicsTableName, topics);
       }
     },
   }).then(db => {
