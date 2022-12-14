@@ -18,6 +18,7 @@ export default class App extends Component {
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
+    this.generateDummy = this.generateDummy.bind(this);
 
     this.store = props.store;
 
@@ -27,21 +28,29 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.store.getAll("topics").then(topicList => {
-      this.setState({
-        topicList: topicList,
+    this.store.getAll("topics")
+      .then(topicList => {
+        this.setState({
+          topicList: topicList,
+        });
       });
-    });
+  }
+
+  generateDummy() {
+    return <Topic key={"isDummy"} id={-1} isDummy={this.create} delete={this.delete} />;
   }
 
   create(newTopic) {
     let newTopicList = this.state.topicList;
+    delete newTopic.id;
     console.log("create", newTopic);
 
-    return this.store.put("topics", newTopic)
+    return this.store.add("topics", newTopic)
       .then(id => {
-        newTopic.key = id;
-        newTopicList.push(newTopic);
+        //newTopic.key = id;
+        //console.log("after create", newTopicList, newTopic);
+        //newTopicList.push(newTopic);
+        newTopicList.push(this.generateDummy());
 
         this.setState({
           topicList: newTopicList,
@@ -56,19 +65,10 @@ export default class App extends Component {
     let id = topic.id;
 
     topic.isDummy = false;
-    console.log("update", topic, id, this.store);
+    console.log("update", id, topic, this.store.put);
 
-    return this.store.put("topics", topic, id)
+    return this.store.put("topics", topic)
       .then(id => {
-        topic.id = id;
-        topic.key = id;
-        console.log(topic, newTopicList);
-        //newTopicList.push(newTopic);
-
-        //this.setState({
-        //  topicList: newTopicList,
-        //});
-
         return id;
       });
   }
@@ -77,7 +77,7 @@ export default class App extends Component {
     this.store.delete("topics", topic.id)
       .then(r => {
         let newTopicList = this.state.topicList.filter(t => {
-          return t.id !== topic.id;
+          return t.id !== topic.id || topic.id === -1;
         });
 
         this.setState({
@@ -89,9 +89,8 @@ export default class App extends Component {
   render() {
     let topicList = this.state.topicList.map((t, i) => {
       return <Topic key={t.id} id={t.id} {...t} update={this.update} delete={this.delete} />;
-    })
-    //let newKey = topicList.length ? topicList[topicList.length - 1].id : 0;
-    topicList.push(<Topic key={"isDummy"} isDummy={this.create} delete={this.delete} />);
+    });
+    topicList.push(this.generateDummy());
 
     let header = [];
     for(const [key, col] of Object.entries(columnHeaderList)) {

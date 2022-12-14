@@ -28,7 +28,7 @@ export default class Topic extends Component {
       id: props.id ? props.id : 0,
       isDummy: props.isDummy ? props.isDummy : false,
       isDirty: false,
-      name: props.name ? props.name : "{no_name}",
+      name: props.name ? props.name : "",
       depth: props.depth ? props.depth : "understand",
       time_commitment: props.time_commitment ? props.time_commitment : "low",
       difficulty: props.difficulty ? props.difficulty : "easy",
