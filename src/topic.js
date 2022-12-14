@@ -56,7 +56,8 @@ export default class Topic extends Component {
       name={key}
       defaultValue={value}
       onChange={this.handleUpdate}
-      size="small">
+      size="small"
+      value={value}>
       {items}
     </Select>;
 

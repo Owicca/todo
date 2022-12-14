@@ -13,7 +13,7 @@ export default function Store(dbName) {
 
       let topicsTableName = "topics";
       if (!db.objectStoreNames.contains(topicsTableName)) {
-        let topics = db.createObjectStore(topicsTableName, {
+        db.createObjectStore(topicsTableName, {
           keyPath: "id",
           autoIncrement: true,
         });

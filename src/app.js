@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Container from '@mui/material/Container';
+import Tooltip from '@mui/material/Tooltip';
 import Topic from './topic';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
@@ -9,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 
 import {columnHeaderList} from './data/columns';
+import Caption from './caption';
 
 
 export default class App extends Component {
@@ -37,7 +39,6 @@ export default class App extends Component {
   }
 
   generateDummy(generateObject) {
-    console.log(generateObject === undefined);
     let dummy = generateObject === undefined ?
       <Topic key={"isDummy"} id={-1} isDummy={this.create} delete={this.delete} />
       :
@@ -74,9 +75,6 @@ export default class App extends Component {
   }
 
   update(topic) {
-    let newTopicList = this.state.topicList;
-    let id = topic.id;
-
     topic.isDummy = false;
     //console.log("update", id, topic, this.store.put);
 
@@ -108,6 +106,12 @@ export default class App extends Component {
 
     let header = [];
     for(const [key, col] of Object.entries(columnHeaderList)) {
+      let tooltip = <ol>
+        <li>understand(know about it at a theoretical level)</li>
+        <li>dabble(can apply basic concepts with google in a reasonable time)</li>
+        <li>apply(can apply medium concepts with less than 50% google)</li>
+        <li>teach(confident enough to teach it to somebody else)</li>
+      </ol>;
       let align = key === 'name' ? 'left' : 'right';
       let cell = <TableCell key={key} align={align}>{col.label}</TableCell>;
       header.push(cell);
@@ -117,6 +121,7 @@ export default class App extends Component {
       <Container maxWidth="lg">
         <TableContainer>
           <Table size="small">
+            <Caption />
             <TableHead>
               <TableRow>
                 {header}
