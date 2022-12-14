@@ -36,21 +36,34 @@ export default class App extends Component {
       });
   }
 
-  generateDummy() {
-    return <Topic key={"isDummy"} id={-1} isDummy={this.create} delete={this.delete} />;
+  generateDummy(generateObject) {
+    console.log(generateObject === undefined);
+    let dummy = generateObject === undefined ?
+      <Topic key={"isDummy"} id={-1} isDummy={this.create} delete={this.delete} />
+      :
+      {
+        depth: "understand",
+        difficulty: "easy",
+        isDummy: false,
+        name: "",
+        phase: "not_started",
+        time_commitment: "low",
+      };
+
+    return dummy;
   }
 
   create(newTopic) {
     let newTopicList = this.state.topicList;
     delete newTopic.id;
-    console.log("create", newTopic);
+    //console.log("create", newTopic);
 
     return this.store.add("topics", newTopic)
       .then(id => {
-        //newTopic.key = id;
-        //console.log("after create", newTopicList, newTopic);
-        //newTopicList.push(newTopic);
-        newTopicList.push(this.generateDummy());
+        newTopic.key = id;
+        newTopic.id = id;
+        console.log("after create", newTopicList, newTopic);
+        newTopicList.push(newTopic);
 
         this.setState({
           topicList: newTopicList,
@@ -65,7 +78,7 @@ export default class App extends Component {
     let id = topic.id;
 
     topic.isDummy = false;
-    console.log("update", id, topic, this.store.put);
+    //console.log("update", id, topic, this.store.put);
 
     return this.store.put("topics", topic)
       .then(id => {
@@ -79,6 +92,7 @@ export default class App extends Component {
         let newTopicList = this.state.topicList.filter(t => {
           return t.id !== topic.id || topic.id === -1;
         });
+        //console.log("after del", this.state.topicList, newTopicList, topic);
 
         this.setState({
           topicList: newTopicList,
